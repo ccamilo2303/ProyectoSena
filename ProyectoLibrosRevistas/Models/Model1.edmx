@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="autores">
+          <Key>
+            <PropertyRef Name="id_autor" />
+          </Key>
+          <Property Name="id_autor" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="estudiantes">
+          <Key>
+            <PropertyRef Name="id_estudiante" />
+          </Key>
+          <Property Name="id_estudiante" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="identificacion" Type="numeric" Precision="20" Scale="0" Nullable="false" />
+          <Property Name="nombres" Type="varchar" MaxLength="100" />
+          <Property Name="apellidos" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="estudiantes_revistas_libros">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Informacion" Type="int" Nullable="false" />
+          <Property Name="id_estudiante" Type="int" />
+        </EntityType>
+        <EntityType Name="generos">
+          <Key>
+            <PropertyRef Name="id_genero" />
+          </Key>
+          <Property Name="id_genero" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="libros">
+          <Key>
+            <PropertyRef Name="id_Libro" />
+          </Key>
+          <Property Name="id_Libro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_autor" Type="int" />
+          <Property Name="id_genero" Type="int" />
+          <Property Name="id_Informacion" Type="int" />
+        </EntityType>
+        <EntityType Name="revistas">
+          <Key>
+            <PropertyRef Name="id_revista" />
+          </Key>
+          <Property Name="id_revista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_tipo" Type="int" />
+          <Property Name="id_Informacion" Type="int" />
+        </EntityType>
+        <EntityType Name="revistas_libros">
+          <Key>
+            <PropertyRef Name="id_Informacion" />
+          </Key>
+          <Property Name="id_Informacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="numero_paginas" Type="int" />
+          <Property Name="fecha_publicacion" Type="date" />
+          <Property Name="descripcion_general" Type="varchar" MaxLength="500" />
+          <Property Name="editorial" Type="varchar" MaxLength="200" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tipo_revistas">
+          <Key>
+            <PropertyRef Name="id_tipo" />
+          </Key>
+          <Property Name="id_tipo" Type="int" Nullable="false" />
+          <Property Name="nombre_tipo" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_estudiantes_informacion_estudiantes">
+          <End Role="estudiantes" Type="Self.estudiantes" Multiplicity="0..1" />
+          <End Role="estudiantes_revistas_libros" Type="Self.estudiantes_revistas_libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estudiantes">
+              <PropertyRef Name="id_estudiante" />
+            </Principal>
+            <Dependent Role="estudiantes_revistas_libros">
+              <PropertyRef Name="id_estudiante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estudiantes_informacion_informacion">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="1" />
+          <End Role="estudiantes_revistas_libros" Type="Self.estudiantes_revistas_libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="estudiantes_revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_libros_autores">
+          <End Role="autores" Type="Self.autores" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="autores">
+              <PropertyRef Name="id_autor" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_autor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_libros_generos1">
+          <End Role="generos" Type="Self.generos" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="generos">
+              <PropertyRef Name="id_genero" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_genero" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_libros_revistas_libros">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_revistas_revistas_libros">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="0..1" />
+          <End Role="revistas" Type="Self.revistas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="revistas">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_revistas_tipo_revistas">
+          <End Role="tipo_revistas" Type="Self.tipo_revistas" Multiplicity="0..1" />
+          <End Role="revistas" Type="Self.revistas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_revistas">
+              <PropertyRef Name="id_tipo" />
+            </Principal>
+            <Dependent Role="revistas">
+              <PropertyRef Name="id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProyectoModelStoreContainer">
+          <EntitySet Name="autores" EntityType="Self.autores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estudiantes" EntityType="Self.estudiantes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estudiantes_revistas_libros" EntityType="Self.estudiantes_revistas_libros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="generos" EntityType="Self.generos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="libros" EntityType="Self.libros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="revistas" EntityType="Self.revistas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="revistas_libros" EntityType="Self.revistas_libros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_revistas" EntityType="Self.tipo_revistas" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_estudiantes_informacion_estudiantes" Association="Self.FK_estudiantes_informacion_estudiantes">
+            <End Role="estudiantes" EntitySet="estudiantes" />
+            <End Role="estudiantes_revistas_libros" EntitySet="estudiantes_revistas_libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estudiantes_informacion_informacion" Association="Self.FK_estudiantes_informacion_informacion">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="estudiantes_revistas_libros" EntitySet="estudiantes_revistas_libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_libros_autores" Association="Self.FK_libros_autores">
+            <End Role="autores" EntitySet="autores" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_libros_generos1" Association="Self.FK_libros_generos1">
+            <End Role="generos" EntitySet="generos" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_libros_revistas_libros" Association="Self.FK_libros_revistas_libros">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_revistas_revistas_libros" Association="Self.FK_revistas_revistas_libros">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="revistas" EntitySet="revistas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_revistas_tipo_revistas" Association="Self.FK_revistas_tipo_revistas">
+            <End Role="tipo_revistas" EntitySet="tipo_revistas" />
+            <End Role="revistas" EntitySet="revistas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProyectoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="autores">
+          <Key>
+            <PropertyRef Name="id_autor" />
+          </Key>
+          <Property Name="id_autor" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="libros" Relationship="Self.FK_libros_autores" FromRole="autores" ToRole="libros" />
+        </EntityType>
+        <EntityType Name="estudiantes">
+          <Key>
+            <PropertyRef Name="id_estudiante" />
+          </Key>
+          <Property Name="id_estudiante" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="identificacion" Type="Decimal" Precision="20" Scale="0" Nullable="false" />
+          <Property Name="nombres" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="apellidos" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="estudiantes_revistas_libros" Relationship="Self.FK_estudiantes_informacion_estudiantes" FromRole="estudiantes" ToRole="estudiantes_revistas_libros" />
+        </EntityType>
+        <EntityType Name="estudiantes_revistas_libros">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Informacion" Type="Int32" Nullable="false" />
+          <Property Name="id_estudiante" Type="Int32" />
+          <NavigationProperty Name="estudiantes" Relationship="Self.FK_estudiantes_informacion_estudiantes" FromRole="estudiantes_revistas_libros" ToRole="estudiantes" />
+          <NavigationProperty Name="revistas_libros" Relationship="Self.FK_estudiantes_informacion_informacion" FromRole="estudiantes_revistas_libros" ToRole="revistas_libros" />
+        </EntityType>
+        <EntityType Name="generos">
+          <Key>
+            <PropertyRef Name="id_genero" />
+          </Key>
+          <Property Name="id_genero" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="libros" Relationship="Self.FK_libros_generos1" FromRole="generos" ToRole="libros" />
+        </EntityType>
+        <EntityType Name="libros">
+          <Key>
+            <PropertyRef Name="id_Libro" />
+          </Key>
+          <Property Name="id_Libro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_autor" Type="Int32" />
+          <Property Name="id_genero" Type="Int32" />
+          <Property Name="id_Informacion" Type="Int32" />
+          <NavigationProperty Name="autores" Relationship="Self.FK_libros_autores" FromRole="libros" ToRole="autores" />
+          <NavigationProperty Name="generos" Relationship="Self.FK_libros_generos1" FromRole="libros" ToRole="generos" />
+          <NavigationProperty Name="revistas_libros" Relationship="Self.FK_libros_revistas_libros" FromRole="libros" ToRole="revistas_libros" />
+        </EntityType>
+        <EntityType Name="revistas">
+          <Key>
+            <PropertyRef Name="id_revista" />
+          </Key>
+          <Property Name="id_revista" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_tipo" Type="Int32" />
+          <Property Name="id_Informacion" Type="Int32" />
+          <NavigationProperty Name="revistas_libros" Relationship="Self.FK_revistas_revistas_libros" FromRole="revistas" ToRole="revistas_libros" />
+          <NavigationProperty Name="tipo_revistas" Relationship="Self.FK_revistas_tipo_revistas" FromRole="revistas" ToRole="tipo_revistas" />
+        </EntityType>
+        <EntityType Name="revistas_libros">
+          <Key>
+            <PropertyRef Name="id_Informacion" />
+          </Key>
+          <Property Name="id_Informacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="numero_paginas" Type="Int32" />
+          <Property Name="fecha_publicacion" Type="DateTime" Precision="0" />
+          <Property Name="descripcion_general" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="editorial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="estudiantes_revistas_libros" Relationship="Self.FK_estudiantes_informacion_informacion" FromRole="revistas_libros" ToRole="estudiantes_revistas_libros" />
+          <NavigationProperty Name="libros" Relationship="Self.FK_libros_revistas_libros" FromRole="revistas_libros" ToRole="libros" />
+          <NavigationProperty Name="revistas" Relationship="Self.FK_revistas_revistas_libros" FromRole="revistas_libros" ToRole="revistas" />
+        </EntityType>
+        <EntityType Name="tipo_revistas">
+          <Key>
+            <PropertyRef Name="id_tipo" />
+          </Key>
+          <Property Name="id_tipo" Type="Int32" Nullable="false" />
+          <Property Name="nombre_tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="revistas" Relationship="Self.FK_revistas_tipo_revistas" FromRole="tipo_revistas" ToRole="revistas" />
+        </EntityType>
+        <Association Name="FK_libros_autores">
+          <End Role="autores" Type="Self.autores" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="autores">
+              <PropertyRef Name="id_autor" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_autor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estudiantes_informacion_estudiantes">
+          <End Role="estudiantes" Type="Self.estudiantes" Multiplicity="0..1" />
+          <End Role="estudiantes_revistas_libros" Type="Self.estudiantes_revistas_libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estudiantes">
+              <PropertyRef Name="id_estudiante" />
+            </Principal>
+            <Dependent Role="estudiantes_revistas_libros">
+              <PropertyRef Name="id_estudiante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estudiantes_informacion_informacion">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="1" />
+          <End Role="estudiantes_revistas_libros" Type="Self.estudiantes_revistas_libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="estudiantes_revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_libros_generos1">
+          <End Role="generos" Type="Self.generos" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="generos">
+              <PropertyRef Name="id_genero" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_genero" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_libros_revistas_libros">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="0..1" />
+          <End Role="libros" Type="Self.libros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="libros">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_revistas_revistas_libros">
+          <End Role="revistas_libros" Type="Self.revistas_libros" Multiplicity="0..1" />
+          <End Role="revistas" Type="Self.revistas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="revistas_libros">
+              <PropertyRef Name="id_Informacion" />
+            </Principal>
+            <Dependent Role="revistas">
+              <PropertyRef Name="id_Informacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_revistas_tipo_revistas">
+          <End Role="tipo_revistas" Type="Self.tipo_revistas" Multiplicity="0..1" />
+          <End Role="revistas" Type="Self.revistas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_revistas">
+              <PropertyRef Name="id_tipo" />
+            </Principal>
+            <Dependent Role="revistas">
+              <PropertyRef Name="id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProyectoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="autores" EntityType="Self.autores" />
+          <EntitySet Name="estudiantes" EntityType="Self.estudiantes" />
+          <EntitySet Name="estudiantes_revistas_libros" EntityType="Self.estudiantes_revistas_libros" />
+          <EntitySet Name="generos" EntityType="Self.generos" />
+          <EntitySet Name="libros" EntityType="Self.libros" />
+          <EntitySet Name="revistas" EntityType="Self.revistas" />
+          <EntitySet Name="revistas_libros" EntityType="Self.revistas_libros" />
+          <EntitySet Name="tipo_revistas" EntityType="Self.tipo_revistas" />
+          <AssociationSet Name="FK_libros_autores" Association="Self.FK_libros_autores">
+            <End Role="autores" EntitySet="autores" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estudiantes_informacion_estudiantes" Association="Self.FK_estudiantes_informacion_estudiantes">
+            <End Role="estudiantes" EntitySet="estudiantes" />
+            <End Role="estudiantes_revistas_libros" EntitySet="estudiantes_revistas_libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estudiantes_informacion_informacion" Association="Self.FK_estudiantes_informacion_informacion">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="estudiantes_revistas_libros" EntitySet="estudiantes_revistas_libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_libros_generos1" Association="Self.FK_libros_generos1">
+            <End Role="generos" EntitySet="generos" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_libros_revistas_libros" Association="Self.FK_libros_revistas_libros">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="libros" EntitySet="libros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_revistas_revistas_libros" Association="Self.FK_revistas_revistas_libros">
+            <End Role="revistas_libros" EntitySet="revistas_libros" />
+            <End Role="revistas" EntitySet="revistas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_revistas_tipo_revistas" Association="Self.FK_revistas_tipo_revistas">
+            <End Role="tipo_revistas" EntitySet="tipo_revistas" />
+            <End Role="revistas" EntitySet="revistas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProyectoModelStoreContainer" CdmEntityContainer="ProyectoEntities">
+          <EntitySetMapping Name="autores">
+            <EntityTypeMapping TypeName="ProyectoModel.autores">
+              <MappingFragment StoreEntitySet="autores">
+                <ScalarProperty Name="id_autor" ColumnName="id_autor" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estudiantes">
+            <EntityTypeMapping TypeName="ProyectoModel.estudiantes">
+              <MappingFragment StoreEntitySet="estudiantes">
+                <ScalarProperty Name="id_estudiante" ColumnName="id_estudiante" />
+                <ScalarProperty Name="identificacion" ColumnName="identificacion" />
+                <ScalarProperty Name="nombres" ColumnName="nombres" />
+                <ScalarProperty Name="apellidos" ColumnName="apellidos" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estudiantes_revistas_libros">
+            <EntityTypeMapping TypeName="ProyectoModel.estudiantes_revistas_libros">
+              <MappingFragment StoreEntitySet="estudiantes_revistas_libros">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_Informacion" ColumnName="id_Informacion" />
+                <ScalarProperty Name="id_estudiante" ColumnName="id_estudiante" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="generos">
+            <EntityTypeMapping TypeName="ProyectoModel.generos">
+              <MappingFragment StoreEntitySet="generos">
+                <ScalarProperty Name="id_genero" ColumnName="id_genero" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="libros">
+            <EntityTypeMapping TypeName="ProyectoModel.libros">
+              <MappingFragment StoreEntitySet="libros">
+                <ScalarProperty Name="id_Libro" ColumnName="id_Libro" />
+                <ScalarProperty Name="id_autor" ColumnName="id_autor" />
+                <ScalarProperty Name="id_genero" ColumnName="id_genero" />
+                <ScalarProperty Name="id_Informacion" ColumnName="id_Informacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="revistas">
+            <EntityTypeMapping TypeName="ProyectoModel.revistas">
+              <MappingFragment StoreEntitySet="revistas">
+                <ScalarProperty Name="id_revista" ColumnName="id_revista" />
+                <ScalarProperty Name="id_tipo" ColumnName="id_tipo" />
+                <ScalarProperty Name="id_Informacion" ColumnName="id_Informacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="revistas_libros">
+            <EntityTypeMapping TypeName="ProyectoModel.revistas_libros">
+              <MappingFragment StoreEntitySet="revistas_libros">
+                <ScalarProperty Name="id_Informacion" ColumnName="id_Informacion" />
+                <ScalarProperty Name="numero_paginas" ColumnName="numero_paginas" />
+                <ScalarProperty Name="fecha_publicacion" ColumnName="fecha_publicacion" />
+                <ScalarProperty Name="descripcion_general" ColumnName="descripcion_general" />
+                <ScalarProperty Name="editorial" ColumnName="editorial" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_revistas">
+            <EntityTypeMapping TypeName="ProyectoModel.tipo_revistas">
+              <MappingFragment StoreEntitySet="tipo_revistas">
+                <ScalarProperty Name="id_tipo" ColumnName="id_tipo" />
+                <ScalarProperty Name="nombre_tipo" ColumnName="nombre_tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
